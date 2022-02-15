@@ -46,32 +46,34 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/10")
       .expect(200)
       .then(({ body: { article } }) => {
-        expect(article).toBeInstanceOf(Object);
-        expect(article).toEqual({
-          article_id: expect.any(Number),
-          title: expect.any(String),
-          topic: expect.any(String),
-          author: expect.any(String),
-          body: expect.any(String),
-          created_at: expect.any(String),
-          votes: expect.any(Number),
-        });
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+          })
+        );
+        expect(article.article_id).toBe(10);
       });
   });
   test('status: 400 - responds with "invalid input" for invalid article_id', () => {
     return request(app)
       .get("/api/articles/blabla")
       .expect(400)
-      .then(({ body: { msq } }) => {
-        expect(msq).toBe("Invalid input");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid input");
       });
   });
   test('status: 404 - responds with " article not  found" when passed article_id that\'s not in the database', () => {
     return request(app)
       .get("/api/articles/999")
       .expect(404)
-      .then(({ body: { msq } }) => {
-        expect(msq).toBe("Article not found");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Article not found");
       });
   });
 });
