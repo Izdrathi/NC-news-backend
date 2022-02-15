@@ -4,10 +4,13 @@ const seed = require("../db/seeds/seed.js");
 const db = require("../db/connection.js");
 const testData = require("../db/data/test-data/index.js");
 
-const runTest = () => {
-  return seed(testData).then(() => db.end());
-};
-runTest();
+beforeEach(() => {
+  return seed(testData);
+});
+
+afterAll(() => {
+  return db.end();
+});
 
 describe("ANY PATH", () => {
   test("status: 404 - responds with path not found when given incorrect path", () => {
@@ -33,8 +36,42 @@ describe("GET /api/topics", () => {
               description: expect.any(String),
             })
           );
-          console.log(response.body.topics);
         });
+      });
+  });
+});
+describe("GET /api/articles/:article_id", () => {
+  test("status: 200 - responds with an article object", () => {
+    return request(app)
+      .get("/api/articles/10")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toBeInstanceOf(Object);
+        expect(article).toEqual({
+          article_id: expect.any(Number),
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+        });
+      });
+  });
+  test('status: 400 - responds with "invalid input" for invalid article_id', () => {
+    return request(app)
+      .get("/api/articles/blabla")
+      .expect(400)
+      .then(({ body: { msq } }) => {
+        expect(msq).toBe("Invalid input");
+      });
+  });
+  test('status: 404 - responds with " article not  found" when passed article_id that\'s not in the database', () => {
+    return request(app)
+      .get("/api/articles/999")
+      .expect(404)
+      .then(({ body: { msq } }) => {
+        expect(msq).toBe("Article not found");
       });
   });
 });
