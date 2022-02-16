@@ -58,3 +58,9 @@ exports.updateVotes = (article_id, voteObject) => {
       });
   }
 };
+
+exports.selectUsers = () => {
+  return db.query("SELECT username FROM users;").then(({ rows }) => {
+    return rows;
+  });
+};

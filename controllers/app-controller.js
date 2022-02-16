@@ -2,6 +2,7 @@ const {
   selectTopics,
   selectArticleById,
   updateVotes,
+  selectUsers,
 } = require("../models/app-model.js");
 
 exports.getTopics = (req, res, next) => {
@@ -30,6 +31,16 @@ exports.updateArticleById = (req, res, next) => {
   updateVotes(article_id, req.body)
     .then((article) => {
       res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getUsers = (req, res, next) => {
+  selectUsers()
+    .then((allUsers) => {
+      res.status(200).send({ username: allUsers });
     })
     .catch((err) => {
       next(err);
