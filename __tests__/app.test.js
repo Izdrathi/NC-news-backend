@@ -145,4 +145,14 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(msg).toBe("Invalid input");
       });
   });
+  test('status: 404 - responds with "article not found" when passed article_id that\'s not in the database', () => {
+    const voteUpdate = { inc_votes: 10 };
+    return request(app)
+      .patch("/api/articles/999")
+      .send(voteUpdate)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Article not found");
+      });
+  });
 });

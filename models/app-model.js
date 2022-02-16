@@ -36,7 +36,9 @@ exports.updateVotes = (article_id, voteObject) => {
         [votes, article_id]
       )
       .then(({ rows }) => {
-        return rows[0];
+        if (rows.length === 0)
+          return Promise.reject({ status: 404, msg: "Article not found" });
+        else return rows[0];
       });
   } else {
     return db
@@ -50,7 +52,9 @@ exports.updateVotes = (article_id, voteObject) => {
         [votes, article_id]
       )
       .then(({ rows }) => {
-        return rows[0];
+        if (rows.length === 0)
+          return Promise.reject({ status: 404, msg: "Article not found" });
+        else return rows[0];
       });
   }
 };
