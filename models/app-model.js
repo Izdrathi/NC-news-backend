@@ -64,3 +64,15 @@ exports.selectUsers = () => {
     return rows;
   });
 };
+
+exports.selectArticles = () => {
+  return db
+    .query(
+      `SELECT author, title, article_id, topic, created_at, votes 
+      FROM articles
+      ORDER BY created_at DESC;`
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+};

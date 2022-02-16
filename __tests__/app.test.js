@@ -157,7 +157,7 @@ describe("PATCH /api/articles/:article_id", () => {
   });
 });
 describe("GET /api/users", () => {
-  test("status: 200 - responds with an array ob objects", () => {
+  test("status: 200 - responds with an array of user objects", () => {
     return request(app)
       .get("/api/users")
       .expect(200)
@@ -170,6 +170,37 @@ describe("GET /api/users", () => {
             })
           );
         });
+      });
+  });
+});
+describe("GET /api/articles", () => {
+  test("status: 200 - responds with an array of article objects ", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toHaveLength(12);
+        response.body.articles.forEach((topic) => {
+          expect(topic).toEqual(
+            expect.objectContaining({
+              article_id: expect.any(Number),
+              title: expect.any(String),
+              topic: expect.any(String),
+              author: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+  test("status: 200 - responds with an array of article objects sorted by created_at in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toHaveLength(12);
+        expect(articles).toBeSortedBy("created_at", { descending: true });
       });
   });
 });
