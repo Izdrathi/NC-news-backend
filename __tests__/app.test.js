@@ -77,3 +77,82 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
+describe("PATCH /api/articles/:article_id", () => {
+  test("status: 200 - responds with updated object when votes are a positive number", () => {
+    const voteUpdate = {
+      inc_votes: 1,
+    };
+    return request(app)
+      .patch("/api/articles/10")
+      .send(voteUpdate)
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+          })
+        );
+        expect(article.votes).toBe(1);
+      });
+  });
+  test("status: 200 - responds with updated object when votes are a negative number", () => {
+    const voteUpdate = {
+      inc_votes: -10,
+    };
+    return request(app)
+      .patch("/api/articles/5")
+      .send(voteUpdate)
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+          })
+        );
+        expect(article.votes).toBe(-10);
+        expect(article.article_id).toBe(5);
+      });
+  });
+  test('status: 400 - responds with "Bad request" for empty input', () => {
+    const voteUpdate = {};
+    return request(app)
+      .patch("/api/articles/5")
+      .send(voteUpdate)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test('status: 400 - responds with "Invalid input" for invalid input', () => {
+    const voteUpdate = { inc_votes: "bananas" };
+    return request(app)
+      .patch("/api/articles/5")
+      .send(voteUpdate)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid input");
+      });
+  });
+  test('status: 404 - responds with "article not found" when passed article_id that\'s not in the database', () => {
+    const voteUpdate = { inc_votes: 10 };
+    return request(app)
+      .patch("/api/articles/999")
+      .send(voteUpdate)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Article not found");
+      });
+  });
+});
