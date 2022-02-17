@@ -204,3 +204,63 @@ describe("GET /api/articles", () => {
       });
   });
 });
+describe("GET /api/articles/:article_id (comment count)", () => {
+  test("status: 200 - responds with the relevant object including comments count", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count: expect.any(Number),
+          })
+        );
+        expect(article.article_id).toBe(1);
+        expect(article.comment_count).toBe(11);
+      });
+  });
+  test("status: 200 - responds with the relevant object including comments count = 0 when there are no comments for the article", () => {
+    return request(app)
+      .get("/api/articles/7")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count: expect.any(Number),
+          })
+        );
+        expect(article.article_id).toBe(7);
+        expect(article.comment_count).toBe(0);
+      });
+  });
+  test('status: 400 - responds with "invalid input" for invalid article_id', () => {
+    return request(app)
+      .get("/api/articles/blabla")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid input");
+      });
+  });
+  test('status: 404 - responds with " article not  found" when passed article_id that\'s not in the database', () => {
+    return request(app)
+      .get("/api/articles/999")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Article not found");
+      });
+  });
+});
