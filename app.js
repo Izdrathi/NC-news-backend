@@ -5,7 +5,6 @@ const {
   updateArticleById,
   getUsers,
   getArticles,
-  getArticleWithComments,
 } = require("./controllers/app-controller.js");
 const {
   handlePsqlErrors,
