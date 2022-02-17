@@ -204,3 +204,31 @@ describe("GET /api/articles", () => {
       });
   });
 });
+describe("GET /api/articles/:article_id (comment count)", () => {
+  test("status: 200 - responds with the relevant object including comment_count", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            comment_count: expect.any(Number),
+          })
+        );
+        expect(article.comment_count).toBe(11);
+      });
+  });
+  test("status: 200 - responds with the relevant object including comment_count = 0 when there are no comments for the article", () => {
+    return request(app)
+      .get("/api/articles/7")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            comment_count: expect.any(Number),
+          })
+        );
+        expect(article.comment_count).toBe(0);
+      });
+  });
+});
