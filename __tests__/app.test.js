@@ -293,3 +293,52 @@ describe("GET /api/articles (comment count)", () => {
       });
   });
 });
+describe("POST /api/articles/:article_id/comments", () => {
+  test("status: 201 - responds with the newly added comment", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "case of blablabla",
+    };
+    return request(app)
+      .post("/api/articles/8/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body: { comment } }) => {
+        expect(comment).toEqual(
+          expect.objectContaining({
+            author: "butter_bridge",
+            body: "case of blablabla",
+            comment_id: 19,
+            votes: 0,
+            article_id: 8,
+          })
+        );
+      });
+  });
+  test('status: 400 - responds with "invalid input" for invalid article_id', () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "case of blablabla",
+    };
+    return request(app)
+      .post("/api/articles/blabla/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid input");
+      });
+  });
+  test('status: 404 - responds with "article not found" when passed article_id that\'s not in the database', () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "case of blablabla",
+    };
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Article not found");
+      });
+  });
+});
