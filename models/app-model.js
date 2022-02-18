@@ -111,6 +111,9 @@ exports.checkArticleExists = (article_id) => {
 
 exports.insertComment = (article_id, commentToAdd) => {
   const { username, body } = commentToAdd;
+  if (!commentToAdd) {
+    return Promise.reject({ status: 400, msg: "Invalid input" });
+  }
   return db
     .query(
       `

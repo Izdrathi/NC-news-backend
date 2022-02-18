@@ -341,4 +341,50 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(msg).toBe("Article not found");
       });
   });
+  test('status: 400 - responds with "Invalid input" when passed comment doesn\'t match criteria - invalid username ', () => {
+    const newComment = {
+      username: "rivi",
+      body: "case of blablabla",
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid input");
+      });
+  });
+  test('status: 400 - responds with "Invalid input" when passed comment doesn\'t match criteria - invalid body type ', () => {
+    const newComment = {
+      username: "rivi",
+      body: 7,
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid input");
+      });
+  });
+  test('status: 400 - responds with "Invalid input" when passed comment doesn\'t match criteria - empty comment ', () => {
+    const newComment = {};
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid input");
+      });
+  });
+  test('status: 400 - responds with "Invalid input" when passed comment doesn\'t match criteria - missing body ', () => {
+    const newComment = { username: "butter_bridge" };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid input");
+      });
+  });
 });
