@@ -388,3 +388,54 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+describe("GET /api/articles (queries)", () => {
+  test("status: 200 - accepts sort_by query", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("author", { descending: true });
+      });
+  });
+  test('status: 400 - responds with "Invalid sort query" for invalid query', () => {
+    return request(app)
+      .get("/api/articles?sort_by=bleble")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid sort query");
+      });
+  });
+  test("status: 200 - accepts order query", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author&order=ASC")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("author", { ascending: true });
+      });
+  });
+  test('status: 400 - responds with "Invalid order query" for invalid order', () => {
+    return request(app)
+      .get("/api/articles?order=blabla")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid order query");
+      });
+  });
+  test("status: 200 - accepts topic filter query and returns relevant articles only", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toHaveLength(1);
+        expect(articles[0].topic).toEqual("cats");
+      });
+  });
+  test("status: 200 - accepts topic filter query and returns empty array when passed input doesn't match any articles", () => {
+    return request(app)
+      .get("/api/articles?topic=banana")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toHaveLength(0);
+      });
+  });
+});
