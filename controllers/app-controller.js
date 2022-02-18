@@ -7,6 +7,8 @@ const {
   selectCommentsByArticleId,
   checkArticleExists,
   insertComment,
+  deleteCommentById,
+  checkComments,
 } = require("../models/app-model.js");
 
 exports.getTopics = (req, res, next) => {
@@ -89,6 +91,23 @@ exports.postComment = (req, res, next) => {
   insertComment(article_id, req.body)
     .then((newComment) => {
       res.status(201).send({ comment: newComment[0] });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.deleteComment = (req, res, next) => {
+  const { comment_id } = req.params;
+  checkComments(comment_id)
+    .then(() => {})
+    .catch((err) => {
+      next(err);
+    });
+
+  deleteCommentById(comment_id)
+    .then(() => {
+      res.status(204).send();
     })
     .catch((err) => {
       next(err);

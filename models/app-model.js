@@ -86,11 +86,8 @@ exports.selectArticles = (sort_by = "created_at", order = "DESC", topic) => {
   ];
   const validOrder = ["ASC", "DESC"];
 
-  if (!validForSortBy.includes(sort_by)) {
-    return Promise.reject({ status: 400, msg: "Invalid sort query" });
-  }
-  if (!validOrder.includes(order)) {
-    return Promise.reject({ status: 400, msg: "Invalid order query" });
+  if (!validForSortBy.includes(sort_by) || !validOrder.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid query" });
   }
 
   let queryString = `SELECT articles.*, 
@@ -142,6 +139,26 @@ exports.insertComment = (article_id, commentToAdd) => {
       RETURNING *;`,
       [username, body, article_id]
     )
+    .then(({ rows }) => {
+      return rows;
+    });
+};
+
+exports.checkComments = (comment_id) => {
+  return db
+    .query("SELECT * FROM comments WHERE comment_id = $1;", [comment_id])
+    .then(({ rows }) => {
+      if (rows.length === 0)
+        return Promise.reject({ status: 404, msg: "Comment not found" });
+      else return rows;
+    });
+};
+
+exports.deleteCommentById = (comment_id) => {
+  return db
+    .query("DELETE FROM comments WHERE comment_id = $1 RETURNING*;", [
+      comment_id,
+    ])
     .then(({ rows }) => {
       return rows;
     });
