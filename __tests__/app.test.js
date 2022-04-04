@@ -402,7 +402,7 @@ describe("GET /api/articles (queries)", () => {
       .get("/api/articles?sort_by=bleble")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid sort query");
+        expect(msg).toBe("Invalid query");
       });
   });
   test("status: 200 - accepts order query", () => {
@@ -418,7 +418,7 @@ describe("GET /api/articles (queries)", () => {
       .get("/api/articles?order=blabla")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Invalid order query");
+        expect(msg).toBe("Invalid query");
       });
   });
   test("status: 200 - accepts topic filter query and returns relevant articles only", () => {
@@ -436,6 +436,36 @@ describe("GET /api/articles (queries)", () => {
       .expect(200)
       .then(({ body: { articles } }) => {
         expect(articles).toHaveLength(0);
+      });
+  });
+});
+describe("DELETE /api/comments/:comment_id", () => {
+  test("status: 204 - deletes specified comment ", () => {
+    return request(app)
+      .delete("/api/comments/16")
+      .expect(204)
+      .then(() => {
+        return db
+          .query(`SELECT * FROM comments WHERE article_id = 6;`)
+          .then(({ rows }) => {
+            expect(rows.length).toBe(0);
+          });
+      });
+  });
+  test('status: 404 - responds with "Comment not found" when passed comment_id that\'s not in DB', () => {
+    return request(app)
+      .delete("/api/comments/999")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Comment not found");
+      });
+  });
+  test('status: 400 - responds with "Invalid input" when passed comment_id that\'s invalid', () => {
+    return request(app)
+      .delete("/api/comments/bananas")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Invalid input");
       });
   });
 });
