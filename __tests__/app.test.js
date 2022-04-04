@@ -448,7 +448,7 @@ describe("DELETE /api/comments/:comment_id", () => {
         return db
           .query(`SELECT * FROM comments WHERE article_id = 6;`)
           .then(({ rows }) => {
-            expect(rows.length).toEqual(0);
+            expect(rows.length).toBe(0);
           });
       });
   });
