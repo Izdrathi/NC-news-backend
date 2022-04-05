@@ -12,6 +12,7 @@ const {
     selectUserByName,
     insertArticle,
     updateCommentVotes,
+    postTopic,
 } = require("../models/app-model.js");
 const fs = require("fs");
 
@@ -150,6 +151,16 @@ exports.updateComment = (req, res, next) => {
     updateCommentVotes(comment_id, req.body)
         .then((comment) => {
             res.status(200).send({ comment });
+        })
+        .catch((err) => {
+            next(err);
+        });
+};
+
+exports.addTopic = (req, res, next) => {
+    postTopic(req.body)
+        .then((newTopic) => {
+            res.status(201).send(newTopic);
         })
         .catch((err) => {
             next(err);

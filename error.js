@@ -1,7 +1,9 @@
 exports.handlePsqlErrors = (err, req, res, next) => {
     if (err.code === "22P02" || err.code === "23503" || err.code === "23502")
         res.status(400).send({ msg: "Invalid input" });
-    else next(err);
+    else if (err.code === "23505") {
+        res.status(400).send({ msg: "Topic already exists" });
+    } else next(err);
 };
 
 exports.handleCustomErrors = (err, req, res, next) => {
@@ -11,5 +13,6 @@ exports.handleCustomErrors = (err, req, res, next) => {
 };
 
 exports.handle500s = (err, req, res, next) => {
+    console.log(err);
     res.status(500).send({ msg: "Server Error" });
 };

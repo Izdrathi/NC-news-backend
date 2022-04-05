@@ -635,3 +635,51 @@ describe("PATCH /api/comments/:comment_id", () => {
             });
     });
 });
+describe("POST /api/topic", () => {
+    test("status: 201 - responds with the newly added topic", () => {
+        const newTopic = { slug: "coding", description: "fun time" };
+        return request(app)
+            .post("/api/topics")
+            .send(newTopic)
+            .expect(201)
+            .then(({ body }) => {
+                expect(body).toEqual(
+                    expect.objectContaining({
+                        slug: expect.any(String),
+                        description: expect.any(String),
+                    })
+                );
+                expect(body.slug).toBe("coding");
+            });
+    });
+    test('status: 400 - responds with "invalid input" for invalid input - missing parts', () => {
+        const newTopic = { slug: "coding" };
+        return request(app)
+            .post("/api/topics")
+            .send(newTopic)
+            .expect(400)
+            .then(({ body: { msg } }) => {
+                expect(msg).toBe("Invalid input");
+            });
+    });
+    test('status: 400 - responds with "Invalid input" when passed topic doesn\'t match criteria - empty input ', () => {
+        const newTopic = {};
+        return request(app)
+            .post("/api/topics")
+            .send(newTopic)
+            .expect(400)
+            .then(({ body: { msg } }) => {
+                expect(msg).toBe("Invalid input");
+            });
+    });
+    test('status: 400 - responds with "Topic already exists" when passed topic includes already existing slug ', () => {
+        const newTopic = { slug: "mitch", description: "fun time" };
+        return request(app)
+            .post("/api/topics")
+            .send(newTopic)
+            .expect(400)
+            .then(({ body: { msg } }) => {
+                expect(msg).toBe("Topic already exists");
+            });
+    });
+});

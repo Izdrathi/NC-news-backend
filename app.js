@@ -12,6 +12,7 @@ const {
     getUserByName,
     postArticle,
     updateComment,
+    addTopic,
 } = require("./controllers/app-controller.js");
 const {
     handlePsqlErrors,
@@ -24,6 +25,7 @@ app.use(express.json());
 
 app.get("/api", getApi);
 app.get("/api/topics", getTopics);
+app.post("/api/topics", addTopic);
 
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleById);

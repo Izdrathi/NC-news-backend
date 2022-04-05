@@ -213,3 +213,18 @@ exports.updateCommentVotes = (comment_id, voteObject) => {
             else return rows[0];
         });
 };
+
+exports.postTopic = (topicToAdd) => {
+    const { slug, description } = topicToAdd;
+    return db
+        .query(
+            `
+      INSERT INTO topics ( slug, description ) 
+      VALUES ($1, $2)  
+      RETURNING *;`,
+            [slug, description]
+        )
+        .then(({ rows }) => {
+            return rows[0];
+        });
+};
