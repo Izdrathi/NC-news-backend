@@ -11,6 +11,7 @@ const {
     deleteComment,
     getUserByName,
     postArticle,
+    updateComment,
 } = require("./controllers/app-controller.js");
 const {
     handlePsqlErrors,
@@ -31,6 +32,8 @@ app.post("/api/articles", postArticle);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", postComment);
+
+app.patch("/api/comments/:comment_id", updateComment);
 
 app.get("/api/users", getUsers);
 app.get("/api/users/:username", getUserByName);

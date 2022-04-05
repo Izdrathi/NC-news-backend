@@ -37,45 +37,24 @@ exports.updateVotes = (article_id, voteObject) => {
         return Promise.reject({ status: 400, msg: "Bad request" });
     }
     const votes = voteObject.inc_votes;
-    if (votes >= 0) {
-        return db
-            .query(
-                `
+    return db
+        .query(
+            `
         UPDATE articles
         SET
           votes = votes + $1
         WHERE article_id = $2
         RETURNING *;`,
-                [votes, article_id]
-            )
-            .then(({ rows }) => {
-                if (rows.length === 0)
-                    return Promise.reject({
-                        status: 404,
-                        msg: "Article not found",
-                    });
-                else return rows[0];
-            });
-    } else {
-        return db
-            .query(
-                `
-          UPDATE articles
-          SET
-            votes = $1 - votes
-          WHERE article_id = $2
-          RETURNING *;`,
-                [votes, article_id]
-            )
-            .then(({ rows }) => {
-                if (rows.length === 0)
-                    return Promise.reject({
-                        status: 404,
-                        msg: "Article not found",
-                    });
-                else return rows[0];
-            });
-    }
+            [votes, article_id]
+        )
+        .then(({ rows }) => {
+            if (rows.length === 0)
+                return Promise.reject({
+                    status: 404,
+                    msg: "Article not found",
+                });
+            else return rows[0];
+        });
 };
 
 exports.selectUsers = () => {
@@ -204,5 +183,33 @@ exports.insertArticle = (articleToAdd) => {
         )
         .then(({ rows }) => {
             return rows[0];
+        });
+};
+
+exports.updateCommentVotes = (comment_id, voteObject) => {
+    if (
+        Object.keys(voteObject).length === 0 ||
+        typeof voteObject.inc_votes === !Number
+    ) {
+        return Promise.reject({ status: 400, msg: "Bad request" });
+    }
+    const votes = voteObject.inc_votes;
+    return db
+        .query(
+            `
+    UPDATE comments
+    SET
+      votes = votes + $1
+    WHERE comment_id = $2
+    RETURNING *;`,
+            [votes, comment_id]
+        )
+        .then(({ rows }) => {
+            if (rows.length === 0)
+                return Promise.reject({
+                    status: 404,
+                    msg: "Comment not found",
+                });
+            else return rows[0];
         });
 };

@@ -562,3 +562,76 @@ describe("POST /api/articles", () => {
             });
     });
 });
+describe("PATCH /api/comments/:comment_id", () => {
+    test("status: 200 - responds with updated object when votes are a positive number", () => {
+        const voteUpdate = { inc_votes: 1 };
+        return request(app)
+            .patch("/api/comments/18")
+            .send(voteUpdate)
+            .expect(200)
+            .then(({ body: { comment } }) => {
+                expect(comment).toEqual(
+                    expect.objectContaining({
+                        comment_id: 18,
+                        body: expect.any(String),
+                        author: expect.any(String),
+                        article_id: expect.any(Number),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                    })
+                );
+                expect(comment.votes).toBe(17);
+            });
+    });
+    test("status: 200 - responds with updated object when votes are a negative number", () => {
+        const voteUpdate = { inc_votes: -2 };
+        return request(app)
+            .patch("/api/comments/17")
+            .send(voteUpdate)
+            .expect(200)
+            .then(({ body: { comment } }) => {
+                expect(comment).toEqual(
+                    expect.objectContaining({
+                        comment_id: 17,
+                        body: expect.any(String),
+                        author: expect.any(String),
+                        article_id: expect.any(Number),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                    })
+                );
+                expect(comment.comment_id).toBe(17);
+                expect(comment.votes).toBe(18);
+            });
+    });
+    test('status: 400 - responds with "Bad request" for empty input', () => {
+        const voteUpdate = {};
+        return request(app)
+            .patch("/api/comments/17")
+            .send(voteUpdate)
+            .expect(400)
+            .then(({ body: { msg } }) => {
+                expect(msg).toBe("Bad request");
+            });
+    });
+    test('status: 400 - responds with "Invalid input" for invalid input', () => {
+        const voteUpdate = { inc_votes: "bananas" };
+        return request(app)
+            .patch("/api/comments/17")
+            .send(voteUpdate)
+            .expect(400)
+            .then(({ body: { msg } }) => {
+                expect(msg).toBe("Invalid input");
+            });
+    });
+    test('status: 404 - responds with "comment not found" when passed comment_id that\'s not in the database', () => {
+        const voteUpdate = { inc_votes: 10 };
+        return request(app)
+            .patch("/api/comments/999")
+            .send(voteUpdate)
+            .expect(404)
+            .then(({ body: { msg } }) => {
+                expect(msg).toBe("Comment not found");
+            });
+    });
+});

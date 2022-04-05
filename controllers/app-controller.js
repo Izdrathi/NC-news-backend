@@ -11,6 +11,7 @@ const {
     checkComments,
     selectUserByName,
     insertArticle,
+    updateCommentVotes,
 } = require("../models/app-model.js");
 const fs = require("fs");
 
@@ -138,6 +139,17 @@ exports.postArticle = (req, res, next) => {
     insertArticle(req.body)
         .then((newArticle) => {
             res.status(201).send(newArticle);
+        })
+        .catch((err) => {
+            next(err);
+        });
+};
+
+exports.updateComment = (req, res, next) => {
+    const { comment_id } = req.params;
+    updateCommentVotes(comment_id, req.body)
+        .then((comment) => {
+            res.status(200).send({ comment });
         })
         .catch((err) => {
             next(err);
