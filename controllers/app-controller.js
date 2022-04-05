@@ -10,6 +10,7 @@ const {
     deleteCommentById,
     checkComments,
     selectUserByName,
+    insertArticle,
 } = require("../models/app-model.js");
 const fs = require("fs");
 
@@ -127,6 +128,16 @@ exports.getUserByName = (req, res, next) => {
     selectUserByName(username)
         .then((user) => {
             res.status(200).send({ user });
+        })
+        .catch((err) => {
+            next(err);
+        });
+};
+
+exports.postArticle = (req, res, next) => {
+    insertArticle(req.body)
+        .then((newArticle) => {
+            res.status(201).send(newArticle);
         })
         .catch((err) => {
             next(err);

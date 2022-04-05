@@ -474,7 +474,7 @@ describe("DELETE /api/comments/:comment_id", () => {
 describe("GET /api/users/:username", () => {
     test("status: 200 - responds with a user object", () => {
         return request(app)
-            .get("/api/users/grumpy19")
+            .get("/api/users/lurker")
             .expect(200)
             .then(({ body: { user } }) => {
                 expect(user).toEqual(
@@ -484,15 +484,81 @@ describe("GET /api/users/:username", () => {
                         name: expect.any(String),
                     })
                 );
-                expect(article.username).toBe("grumpy19");
+                expect(user.username).toBe("lurker");
             });
     });
     test('status: 404 - responds with " user not found" when passed username that\'s not in the database', () => {
         return request(app)
-            .get("/api/articles/blabla")
+            .get("/api/users/blabla")
             .expect(404)
             .then(({ body: { msg } }) => {
                 expect(msg).toBe("User not found");
+            });
+    });
+});
+describe("POST /api/articles", () => {
+    test("status: 201 - responds with the newly added article", () => {
+        const newArticle = {
+            author: "butter_bridge",
+            title: "bla",
+            body: "case of blablabla",
+            topic: "cats",
+        };
+        return request(app)
+            .post("/api/articles")
+            .send(newArticle)
+            .expect(201)
+            .then(({ body }) => {
+                expect(body).toEqual(
+                    expect.objectContaining({
+                        author: "butter_bridge",
+                        title: "bla",
+                        body: "case of blablabla",
+                        topic: "cats",
+                        votes: 0,
+                        created_at: expect.any(String),
+                        article_id: expect.any(Number),
+                    })
+                );
+            });
+    });
+    test('status: 400 - responds with "invalid input" for invalid input - missing parts', () => {
+        const newArticle = {
+            author: "butter_bridge",
+            title: "bla",
+            body: "case of blablabla",
+        };
+        return request(app)
+            .post("/api/articles")
+            .send(newArticle)
+            .expect(400)
+            .then(({ body: { msg } }) => {
+                expect(msg).toBe("Invalid input");
+            });
+    });
+    test('status: 400 - responds with "Invalid input" when passed comment doesn\'t match criteria - invalid username ', () => {
+        const newArticle = {
+            author: "rivi",
+            title: "bla",
+            body: "case of blablabla",
+            topic: "cats",
+        };
+        return request(app)
+            .post("/api/articles")
+            .send(newArticle)
+            .expect(400)
+            .then(({ body: { msg } }) => {
+                expect(msg).toBe("Invalid input");
+            });
+    });
+    test('status: 400 - responds with "Invalid input" when passed comment doesn\'t match criteria - empty comment ', () => {
+        const newArticle = {};
+        return request(app)
+            .post("/api/articles")
+            .send(newArticle)
+            .expect(400)
+            .then(({ body: { msg } }) => {
+                expect(msg).toBe("Invalid input");
             });
     });
 });

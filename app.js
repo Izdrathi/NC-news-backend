@@ -10,6 +10,7 @@ const {
     postComment,
     deleteComment,
     getUserByName,
+    postArticle,
 } = require("./controllers/app-controller.js");
 const {
     handlePsqlErrors,
@@ -26,6 +27,8 @@ app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleById);
 app.patch("/api/articles/:article_id", updateArticleById);
+app.post("/api/articles", postArticle);
+
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", postComment);
 

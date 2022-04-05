@@ -188,6 +188,21 @@ exports.selectUserByName = (username) => {
                     status: 404,
                     msg: "User not found",
                 });
-            else return rows;
+            else return rows[0];
+        });
+};
+
+exports.insertArticle = (articleToAdd) => {
+    const { author, title, body, topic } = articleToAdd;
+    return db
+        .query(
+            `
+      INSERT INTO articles (author, title, body, topic) 
+      VALUES ($1, $2, $3, $4)  
+      RETURNING *;`,
+            [author, title, body, topic]
+        )
+        .then(({ rows }) => {
+            return rows[0];
         });
 };
