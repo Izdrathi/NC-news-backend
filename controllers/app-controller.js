@@ -9,6 +9,7 @@ const {
     insertComment,
     deleteCommentById,
     checkComments,
+    selectUserByName,
 } = require("../models/app-model.js");
 const fs = require("fs");
 
@@ -115,6 +116,17 @@ exports.deleteComment = (req, res, next) => {
     deleteCommentById(comment_id)
         .then(() => {
             res.status(204).send();
+        })
+        .catch((err) => {
+            next(err);
+        });
+};
+
+exports.getUserByName = (req, res, next) => {
+    const { username } = req.params;
+    selectUserByName(username)
+        .then((user) => {
+            res.status(200).send({ user });
         })
         .catch((err) => {
             next(err);

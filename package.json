@@ -14,15 +14,15 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/northcoders/be-nc-news.git"
+        "url": "git+https://github.com/Izdrathi/NC-news"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/northcoders/be-nc-news/issues"
+        "url": "https://github.com/Izdrathi/NC-news/issues"
     },
-    "homepage": "https://github.com/northcoders/be-nc-news#readme",
+    "homepage": "https://github.com/Izdrathi/NC-news#readme",
     "devDependencies": {
         "husky": "^7.0.0",
         "jest": "^27.5.1",
