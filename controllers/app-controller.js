@@ -13,6 +13,8 @@ const {
     insertArticle,
     updateCommentVotes,
     postTopic,
+    deleteArticleById,
+    checkArticles,
 } = require("../models/app-model.js");
 const fs = require("fs");
 
@@ -100,7 +102,6 @@ exports.postComment = (req, res, next) => {
         .catch((err) => {
             next(err);
         });
-
     insertComment(article_id, req.body)
         .then((newComment) => {
             res.status(201).send({ comment: newComment[0] });
@@ -115,7 +116,6 @@ exports.deleteComment = (req, res, next) => {
     checkComments(comment_id).catch((err) => {
         next(err);
     });
-
     deleteCommentById(comment_id)
         .then(() => {
             res.status(204).send();
@@ -161,6 +161,21 @@ exports.addTopic = (req, res, next) => {
     postTopic(req.body)
         .then((newTopic) => {
             res.status(201).send(newTopic);
+        })
+        .catch((err) => {
+            next(err);
+        });
+};
+
+exports.deleteArticle = (req, res, next) => {
+    const { article_id } = req.params;
+    // checks if article exists before trying to delete it
+    checkArticles(article_id).catch((err) => {
+        next(err);
+    });
+    deleteArticleById(article_id)
+        .then(() => {
+            res.status(204).send();
         })
         .catch((err) => {
             next(err);

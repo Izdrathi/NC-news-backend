@@ -683,3 +683,33 @@ describe("POST /api/topic", () => {
             });
     });
 });
+describe("DELETE /api/articles/:article_id", () => {
+    test("status: 204 - deletes specified article ", () => {
+        return request(app)
+            .delete("/api/articles/12")
+            .expect(204)
+            .then(() => {
+                return db
+                    .query(`SELECT * FROM articles WHERE article_id = 12;`)
+                    .then(({ rows }) => {
+                        expect(rows.length).toBe(0);
+                    });
+            });
+    });
+    test('status: 404 - responds with "Article not found" when passed article_id that\'s not in DB', () => {
+        return request(app)
+            .delete("/api/articles/999")
+            .expect(404)
+            .then(({ body: { msg } }) => {
+                expect(msg).toBe("Article not found");
+            });
+    });
+    test('status: 400 - responds with "Invalid input" when passed article_id that\'s invalid', () => {
+        return request(app)
+            .delete("/api/articles/bananas")
+            .expect(400)
+            .then(({ body: { msg } }) => {
+                expect(msg).toBe("Invalid input");
+            });
+    });
+});

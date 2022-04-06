@@ -13,6 +13,7 @@ const {
     postArticle,
     updateComment,
     addTopic,
+    deleteArticle,
 } = require("./controllers/app-controller.js");
 const {
     handlePsqlErrors,
@@ -31,6 +32,7 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleById);
 app.patch("/api/articles/:article_id", updateArticleById);
 app.post("/api/articles", postArticle);
+app.delete("/api/articles/:article_id", deleteArticle);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", postComment);
