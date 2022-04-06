@@ -1,20 +1,23 @@
 const express = require("express");
 const {
     getApi,
-    getTopics,
+    getUsers,
+    getUserByName,
+} = require("./controllers/app-controller.js");
+const {
     getArticleById,
     updateArticleById,
-    getUsers,
     getArticles,
+    postArticle,
+    deleteArticle,
+} = require("./controllers/articles-controller.js");
+const {
     getCommentsByArticleId,
     postComment,
     deleteComment,
-    getUserByName,
-    postArticle,
     updateComment,
-    addTopic,
-    deleteArticle,
-} = require("./controllers/app-controller.js");
+} = require("./controllers/comments-controller.js");
+const { getTopics, addTopic } = require("./controllers/topic-controller.js");
 const {
     handlePsqlErrors,
     handle500s,
