@@ -39,13 +39,11 @@ app.delete("/api/articles/:article_id", deleteArticle);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", postComment);
-
 app.patch("/api/comments/:comment_id", updateComment);
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.get("/api/users", getUsers);
 app.get("/api/users/:username", getUserByName);
-
-app.delete("/api/comments/:comment_id", deleteComment);
 
 app.all("/*", (req, res) => {
     res.status(404).send({ msg: "Path not found" });
