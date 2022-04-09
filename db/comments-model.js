@@ -10,8 +10,7 @@ exports.selectCommentsByArticleId = (article_id) => {
 
 exports.insertComment = (article_id, commentToAdd) => {
     const { username, body } = commentToAdd;
-    console.log(commentToAdd.body);
-    if (!commentToAdd || body === undefined) {
+    if (!commentToAdd || body.length === 0) {
         return Promise.reject({ status: 400, msg: "Invalid input" });
     }
     return db

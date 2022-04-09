@@ -5,12 +5,14 @@
 Nortcoders news API is used for accessing application data programmatically - this will provide data to the front end.
 It's using PSQL for database and node-postgres for interaction between the two.
 
+It was created during my time with Nortcoders as my backend solo project.
+
 Hosted version link:
 https://nc-news-backend1.herokuapp.com/api
 
 ## 2. Git instructions
 
-To clone the repo, navigate to the Code button and copy the link using HTTPS option. In your terminal, go to the location where you want the cloned repo to be. Type `git clone` and then paste the URL you copied earlier and press enter to create your local clone.
+Clone the repository from github using below code in your desired folder location.
 
 `$ git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY`
 
@@ -20,15 +22,15 @@ cd into the newly created folder and run command below to get all required depen
 npm install
 ```
 
-## 3. Technologies
+## 3. Required technologies
 
-Node.js version required:
+Node.js version:
 
 ```
 v16.14.2
 ```
 
-PostgreSQL version required:
+PostgreSQL version:
 
 ```
 v12.9
@@ -36,7 +38,7 @@ v12.9
 
 ## 4. Database connection details
 
-To ensure correct connection to the database create separate .env files - one for testing purposes and one for development purposes. Testing DB has a fraction of data available to make it easier to run queries and debug.
+To ensure local connection to the database create separate .env files - one for testing purposes and one for development purposes. Testing DB has a fraction of data available to make it easier to run queries and debug.
 
 ```
 touch .env.test
@@ -73,8 +75,12 @@ npm run seed
 npm run seed:prod
 ```
 
--   Testing
+-   Testing via Jest
 
 ```
 npm run test
 ```
+
+## 6. Starting the server
+
+Run `npm start` in your terminal to start the server - you can view it locally via [http://localhost:9090/api](http://localhost:9090/api) in your web browser - this address will provide all the endpoints available and can be further expanded within endpoints.json.
