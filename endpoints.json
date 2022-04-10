@@ -5,7 +5,7 @@
     "GET /api/topics": {
         "description": "serves an array of all topics",
         "exampleResponse": {
-            "topics": [{ "slug": "String", "description": "String!" }]
+            "topics": [{ "slug": "String", "description": "String" }]
         }
     },
     "GET /api/articles": {
