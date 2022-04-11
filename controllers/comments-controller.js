@@ -23,16 +23,12 @@ exports.getCommentsByArticleId = (req, res, next) => {
 
 exports.postComment = (req, res, next) => {
     const { article_id } = req.params;
-    // checks if article exists, otherwise it will try to
-    //  post invalid comment resulting in PSQL error
-    checkArticleExists(article_id)
-        .then(() => {})
-        .catch((err) => {
-            next(err);
-        });
-    insertComment(article_id, req.body)
+    Promise.all([
+        checkArticleExists(article_id),
+        insertComment(article_id, req.body),
+    ])
         .then((newComment) => {
-            res.status(201).send({ comment: newComment[0] });
+            res.status(201).send({ comment: newComment[1][0] });
         })
         .catch((err) => {
             next(err);
@@ -41,10 +37,7 @@ exports.postComment = (req, res, next) => {
 
 exports.deleteComment = (req, res, next) => {
     const { comment_id } = req.params;
-    checkComments(comment_id).catch((err) => {
-        next(err);
-    });
-    deleteCommentById(comment_id)
+    Promise.all([checkComments(comment_id), deleteCommentById(comment_id)])
         .then(() => {
             res.status(204).send();
         })

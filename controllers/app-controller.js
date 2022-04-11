@@ -2,11 +2,14 @@ const { selectUsers, selectUserByName } = require("../models/app-model.js");
 const fs = require("fs");
 
 exports.getApi = (req, res, next) => {
-    let allEndpoints;
-    fs.readFile("endpoints.json", "utf8", function (err, data) {
-        allEndpoints = JSON.parse(data);
-        res.status(200).send(allEndpoints);
-    });
+    fs.readFile("endpoints.json", "utf8")
+        .then((data) => {
+            let allEndpoints = JSON.parse(data);
+            res.status(200).send(allEndpoints);
+        })
+        .catch((err) => {
+            next(err);
+        });
 };
 
 exports.getUsers = (req, res, next) => {

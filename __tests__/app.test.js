@@ -313,6 +313,7 @@ describe("POST /api/articles/:article_id/comments", () => {
                         comment_id: 19,
                         votes: 0,
                         article_id: 8,
+                        created_at: expect.any(String),
                     })
                 );
             });

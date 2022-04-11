@@ -52,11 +52,7 @@ exports.postArticle = (req, res, next) => {
 
 exports.deleteArticle = (req, res, next) => {
     const { article_id } = req.params;
-    // checks if article exists before trying to delete it
-    checkArticleExists(article_id).catch((err) => {
-        next(err);
-    });
-    deleteArticleById(article_id)
+    Promise.all([checkArticleExists(article_id), deleteArticleById(article_id)])
         .then(() => {
             res.status(204).send();
         })
