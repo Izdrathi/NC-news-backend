@@ -14,7 +14,7 @@ https://nc-news-backend1.herokuapp.com/api
 
 Clone the repository from github using below code in your desired folder location.
 
-`$ git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY`
+`$ git clone https://github.com/Izdrathi/NC-news-backend`
 
 cd into the newly created folder and run command below to get all required dependancies
 
