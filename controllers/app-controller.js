@@ -2,7 +2,7 @@ const { selectUsers, selectUserByName } = require("../models/app-model.js");
 const fs = require("fs");
 
 exports.getApi = (req, res, next) => {
-    fs.readFile("endpoints.json", "utf8")
+    fs.readFile("endpoints.json", { encoding: "utf8" })
         .then((data) => {
             let allEndpoints = JSON.parse(data);
             res.status(200).send(allEndpoints);
